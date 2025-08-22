@@ -67,12 +67,24 @@ def api_datos():
    
 
 
-    data = {
+   ''' data = {
     "dfc_final": df_to_serializable(dfc_final),
     "idcitas_agendados": df_to_serializable(idcitas_agendados),
     "DF_IDCITAS_UNICOS": df_to_serializable(DF_IDCITAS_UNICOS)
    }
-    return jsonify(data)
+    return jsonify(data) '''
+@app.route("/dfc_final")
+def dfc_final():
+    return Response(dfc_final.to_csv(index=False), mimetype="text/csv")
+
+@app.route("/idcitas_agendados")
+def idcitas_agendados():
+    return Response(idcitas_agendados.to_csv(index=False), mimetype="text/csv")
+
+@app.route("/DF_IDCITAS_UNICOS")
+def DF_IDCITAS_UNICOS():
+    return Response(DF_IDCITAS_UNICOS.to_csv(index=False), mimetype="text/csv")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
