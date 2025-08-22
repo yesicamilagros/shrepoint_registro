@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 import pandas as pd
+import time
+import datetime
 from io import BytesIO
 from office365.runtime.auth.authentication_context import AuthenticationContext
 from office365.sharepoint.client_context import ClientContext
@@ -50,10 +52,15 @@ def api_datos():
     ## conversion a strings
 
     def df_to_serializable(df):
-       df_copy = df.copy()
-       for col in df_copy.columns:
-        df_copy[col] = df_copy[col].apply(lambda x: str(x) if isinstance(x, (pd.Timestamp, pd.Timedelta, pd._libs.tslibs.timestamps.Timestamp, time)) else x)
-       return df_copy.to_dict(orient='records')
+        df_copy = df.copy()
+        for col in df_copy.columns:
+            df_copy[col] = df_copy[col].apply(
+                lambda x: str(x) if isinstance(
+                    x, 
+                    (pd.Timestamp, pd.Timedelta, datetime.datetime, datetime.date, datetime.time)
+                ) else x
+            )
+        return df_copy.to_dict(orient='records')
 
    
     # Aquí puedes devolver varios dataframes si quieres
