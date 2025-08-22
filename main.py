@@ -33,6 +33,10 @@ def procesar_dataframes():
     dfc['IDCITA_CLEAR_4'] = dfc['IDCITA_CLEAR_3']
     dfc_final = dfc.explode('IDCITA_CLEAR_4')
 
+
+    dfc_final[['IDCITA_CLEAR_2', 'IDCITA_CLEAR_4']] =  dfc_final[['IDCITA_CLEAR_2', 'IDCITA_CLEAR_4']].replace('', pd.NA)
+    dfc_final['IDCITA_CLEAR_5'] =  dfc_final['IDCITA_CLEAR_4'].combine_first( dfc_final['IDCITA_CLEAR_2'])
+
     idcitas_agendados = dfc_final[['IDCITA','IDCITA_CLEAR','IDCITA_CLEAR_2','IDCITA_CLEAR_3','IDCITA_CLEAR_4']].copy()
     idcitas_agendados[['IDCITA_CLEAR_2', 'IDCITA_CLEAR_4']] = idcitas_agendados[['IDCITA_CLEAR_2', 'IDCITA_CLEAR_4']].replace('', pd.NA)
     idcitas_agendados['IDCITA_CLEAR_5'] = idcitas_agendados['IDCITA_CLEAR_4'].combine_first(idcitas_agendados['IDCITA_CLEAR_2'])
@@ -47,10 +51,7 @@ def endpoint_dfc_final():
     dfc_final, _, _ = procesar_dataframes()
     return Response(dfc_final.to_csv(index=False), mimetype="text/csv")
 
-@app.route("/idcitas_agendados")
-def endpoint_idcitas_agendados():
-    _, idcitas_agendados, _ = procesar_dataframes()
-    return Response(idcitas_agendados.to_csv(index=False), mimetype="text/csv")
+
 
 @app.route("/DF_IDCITAS_UNICOS")
 def endpoint_df_idcitas_unicos():
