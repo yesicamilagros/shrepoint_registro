@@ -45,7 +45,7 @@ def procesar_dataframes():
     DF_IDCITAS_UNICOS = pd.DataFrame(valores_unicos, columns=['id_citas'])
 
     return dfc_final, idcitas_agendados, DF_IDCITAS_UNICOS
-
+##
 @app.route("/dfc_final")
 def endpoint_dfc_final():
     dfc_final, _, _ = procesar_dataframes()
