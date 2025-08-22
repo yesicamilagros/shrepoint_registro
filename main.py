@@ -47,12 +47,24 @@ def api_datos():
     dfc_final['IDCITA_CLEAR_5'] =  dfc_final['IDCITA_CLEAR_4'].combine_first( dfc_final['IDCITA_CLEAR_2'])
    
     # Aquí puedes devolver varios dataframes si quieres
-    data = {
-        "dfc_final": dfc_final.to_dict(orient="records"),
-        "idcitas_agendados": idcitas_agendados.to_dict(orient="records"),
-        "DF_IDCITAS_UNICOS": DF_IDCITAS_UNICOS.to_dict(orient="records")
-    }
+    ## conversion a strings
 
+    def df_to_serializable(df):
+       df_copy = df.copy()
+       for col in df_copy.columns:
+        df_copy[col] = df_copy[col].apply(lambda x: str(x) if isinstance(x, (pd.Timestamp, pd.Timedelta, pd._libs.tslibs.timestamps.Timestamp, time)) else x)
+       return df_copy.to_dict(orient='records')
+
+   
+    # Aquí puedes devolver varios dataframes si quieres
+   
+
+
+    data = {
+    "dfc_final": df_to_serializable(dfc_final),
+    "idcitas_agendados": df_to_serializable(idcitas_agendados),
+    "DF_IDCITAS_UNICOS": df_to_serializable(DF_IDCITAS_UNICOS)
+   }
     return jsonify(data)
 
 if __name__ == "__main__":
